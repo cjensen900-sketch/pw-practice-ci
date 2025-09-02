@@ -12,8 +12,18 @@ export default defineConfig<TestOptions>({
     toMatchSnapshot: {maxDiffPixels: 100}
   },
    retries: 1,
-   reporter: //'html', 
-   [
+   reporter: [
+    process.env.CI ? ["dot"] : ["list"],
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        //Upload to Argos in CI only
+        uploadToArgos: process.env.CI,
+
+        //Set your Argos token(reguired if not using GitHub Actions)
+        token: "<YOUR-ARGOS-TOKEN>",
+      },
+    ],
     ['json', {outputFile: 'test-results.json/jsonReport.json'}],
     ['junit', {outputFile: 'test-results.json/junitReport.xml'}],
     //['allure-playwright'],
@@ -28,6 +38,7 @@ export default defineConfig<TestOptions>({
           : 'http://localhost:4200/',
 
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
     actionTimeout: 20000,
     navigationTimeout: 25000,
     video: {
