@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 
 
-export class HelperBase {
+export class HelperBase{
 
     readonly page: Page
 
